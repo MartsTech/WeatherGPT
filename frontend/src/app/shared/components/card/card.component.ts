@@ -1,9 +1,12 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import type { CardBackground } from './card-types';
 
 @Component({
+  standalone: true,
   selector: 'app-card',
+  imports: [NgClass],
   template: `
     <div
       [ngClass]="

@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { Country, ICountry } from 'country-state-city';
 
 @Component({
+  standalone: true,
   selector: 'app-city-picker',
+  imports: [NgSelectModule, FormsModule],
   template: `
     <ng-select
       [items]="countries"

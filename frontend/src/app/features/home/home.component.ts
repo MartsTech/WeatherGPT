@@ -1,7 +1,21 @@
 import { Component } from '@angular/core';
 
+import { CardComponent } from '@shared/components/card/card.component';
+import { CityPickerComponent } from '@shared/components/city-picker/city-picker.component';
+import { DividerComponent } from '@shared/components/divider/divider.component';
+import { SubtitleComponent } from '@shared/components/subtitle/subtitle.component';
+import { TitleComponent } from '@shared/components/title/title.component';
+
 @Component({
+  standalone: true,
   selector: 'app-home',
+  imports: [
+    CardComponent,
+    TitleComponent,
+    SubtitleComponent,
+    DividerComponent,
+    CityPickerComponent,
+  ],
   template: `
     <div
       class="flex min-h-screen flex-col justify-center bg-gradient-to-br from-[#394F68] to-[#183B7E] p-10">
