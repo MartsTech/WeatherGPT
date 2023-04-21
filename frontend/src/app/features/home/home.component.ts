@@ -16,7 +16,9 @@ import { Component } from '@angular/core';
           <div class="my-10">
             <app-divider></app-divider>
           </div>
-          <app-card background="blue"></app-card>
+          <app-card background="blue">
+            <app-city-picker></app-city-picker>
+          </app-card>
         </app-card>
       </div>
     </div>

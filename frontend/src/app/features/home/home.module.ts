@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { CardModule } from '@shared/components/card/card.module';
+import { CityPickerModule } from '@shared/components/city-picker/city-picker.module';
 import { DividerModule } from '@shared/components/divider/divider.module';
 import { SubtitleModule } from '@shared/components/subtitle/subtitle.module';
 import { TitleModule } from '@shared/components/title/title.module';
@@ -15,6 +16,7 @@ import { HomeComponent } from './home.component';
     TitleModule,
     SubtitleModule,
     DividerModule,
+    CityPickerModule,
   ],
   declarations: [HomeComponent],
   bootstrap: [HomeComponent],
