@@ -4,27 +4,62 @@ import { ActivatedRoute } from '@angular/router';
 import { City, Country, ICity, ICountry } from 'country-state-city';
 
 import { CalloutComponent } from '@shared/components/callout/callout.component';
+import { MetricComponent } from '@shared/components/metric/metric.component';
 
-import { IForecast } from './forecast-types';
+import type { IForecast } from './forecast-types';
 import { ForecastService } from './forecast.service';
 
 @Component({
   selector: 'app-forecast',
   standalone: true,
-  imports: [NgIf, CalloutComponent],
+  imports: [NgIf, CalloutComponent, MetricComponent],
   template: `
-    <div *ngIf="forecast">
+    <div *ngIf="!!forecast">
       <div>
         <div class="p-5">
           <div class="pb-5">
             <h2 class="text-xl font-bold">Todays Overview</h2>
-            <p *ngIf="lastUpdated" class="text-sm text-gray-400">
+            <p *ngIf="!!lastUpdated" class="text-sm text-gray-400">
               Last Updated at {{ lastUpdated }} {{ forecast.timezone }}
             </p>
           </div>
-
-          <div>
+          <div class="m-2 mb-10">
             <app-callout></app-callout>
+          </div>
+          <div class="m-2 grid grid-cols-1 gap-5 xl:grid-cols-2">
+            <app-metric
+              *ngIf="!!maxTemperature"
+              title="Maximum Temperature"
+              [value]="maxTemperature"
+              color="yellow"></app-metric>
+            <app-metric
+              *ngIf="!!minTemperature"
+              title="Minimum Temperature"
+              [value]="minTemperature"
+              color="green"></app-metric>
+            <div>
+              <app-metric
+                *ngIf="!!uvIndex"
+                title="UV Index"
+                [value]="uvIndex"
+                color="rose"></app-metric>
+              <app-callout
+                *ngIf="isUvIndexHigh"
+                [warning]="true"
+                title="The UV is high today, be sure to wear SPF!"></app-callout>
+            </div>
+            <div class="grid grid-cols-2 space-x-3">
+              <app-metric
+                *ngIf="!!windSpeed"
+                title="Wind Speed"
+                [value]="windSpeed"
+                color="cyan"></app-metric>
+              <app-metric
+                *ngIf="!!windDirection"
+                title="Wind Direction"
+                [value]="windDirection"
+                color="violet"></app-metric>
+            </div>
           </div>
         </div>
       </div>
@@ -36,6 +71,12 @@ export class ForecastComponent implements OnInit {
   city: ICity | null = null;
   forecast: IForecast | null = null;
   lastUpdated: string | null = null;
+  maxTemperature: string | null = null;
+  minTemperature: string | null = null;
+  uvIndex: string | null = null;
+  isUvIndexHigh: boolean = false;
+  windSpeed: string | null = null;
+  windDirection: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -62,8 +103,30 @@ export class ForecastComponent implements OnInit {
         )
         .subscribe(data => {
           this.forecast = data;
+
           this.lastUpdated =
             new Date(data.current_weather.time).toLocaleString() || null;
+
+          this.maxTemperature = data.daily.temperature_2m_max
+            ? data.daily.temperature_2m_max[0].toFixed(1)
+            : null;
+
+          this.minTemperature = data.daily.temperature_2m_min
+            ? data.daily.temperature_2m_min[0].toFixed(1)
+            : null;
+
+          this.uvIndex = data.daily.uv_index_max
+            ? data.daily.uv_index_max[0].toFixed(1)
+            : null;
+
+          this.isUvIndexHigh = data.daily.uv_index_max
+            ? data.daily.uv_index_max[0] > 5
+            : false;
+
+          this.windSpeed = data.current_weather.windspeed.toFixed(1) + ' m/s';
+
+          this.windDirection =
+            data.current_weather.winddirection.toFixed(1) + '°';
         });
     });
   }
