@@ -14,7 +14,9 @@
           "inlineTemplate": true,
           "inlineStyle": true,
           "skipTests": true,
-          "standalone": true
+          "standalone": true,
+          "skipImport": true,
+          "style": "none"
         }
       },
       "root": "",

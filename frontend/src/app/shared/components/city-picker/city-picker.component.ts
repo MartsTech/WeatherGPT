@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -11,7 +11,7 @@ import { CityPickedEvent } from './city-types';
 @Component({
   standalone: true,
   selector: 'app-city-picker',
-  imports: [CommonModule, NgSelectModule, FormsModule, GlobeComponent],
+  imports: [NgIf, NgSelectModule, FormsModule, GlobeComponent],
   template: `
     <div class="space-y-4">
       <div class="space-y-2">

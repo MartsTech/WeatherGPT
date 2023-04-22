@@ -1,19 +1,41 @@
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { City, Country, ICity, ICountry } from 'country-state-city';
+
+import { CalloutComponent } from '@shared/components/callout/callout.component';
+
 import { IForecast } from './forecast-types';
 import { ForecastService } from './forecast.service';
 
 @Component({
   selector: 'app-forecast',
   standalone: true,
-  template: ` <p>forecast works!</p> `,
+  imports: [NgIf, CalloutComponent],
+  template: `
+    <div *ngIf="forecast">
+      <div>
+        <div class="p-5">
+          <div class="pb-5">
+            <h2 class="text-xl font-bold">Todays Overview</h2>
+            <p *ngIf="lastUpdated" class="text-sm text-gray-400">
+              Last Updated at {{ lastUpdated }} {{ forecast.timezone }}
+            </p>
+          </div>
+
+          <div>
+            <app-callout></app-callout>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
 })
 export class ForecastComponent implements OnInit {
   country: ICountry | null = null;
   city: ICity | null = null;
   forecast: IForecast | null = null;
+  lastUpdated: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +62,8 @@ export class ForecastComponent implements OnInit {
         )
         .subscribe(data => {
           this.forecast = data;
+          this.lastUpdated =
+            new Date(data.current_weather.time).toLocaleString() || null;
         });
     });
   }
