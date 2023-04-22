@@ -21,7 +21,7 @@ def get_forecast(request, lat: str, lon: str) -> HttpResponse:
     cached_data = cache.get(cache_key)
 
     if cached_data is not None:
-        return JsonResponse(cached_data, status=304)
+        return JsonResponse(cached_data, status=200)
 
     url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&hourly=temperature_2m," \
           f"relativehumidity_2m,apparent_temperature,precipitation_probability,precipitation,rain,showers," \

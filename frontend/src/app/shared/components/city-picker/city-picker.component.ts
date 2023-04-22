@@ -1,11 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { City, Country, ICity, ICountry } from 'country-state-city';
 
 import { GlobeComponent } from '@shared/icons/globe/globe.component';
 
+import { ActivatedRoute } from '@angular/router';
 import { CityPickedEvent } from './city-types';
 
 @Component({
@@ -47,7 +48,7 @@ import { CityPickedEvent } from './city-types';
     </div>
   `,
 })
-export class CityPickerComponent {
+export class CityPickerComponent implements OnInit {
   @Output() onCityPicked = new EventEmitter<CityPickedEvent>();
 
   countries: ICountry[] = [];
@@ -55,8 +56,26 @@ export class CityPickerComponent {
   cities: ICity[] = [];
   selectedCity: ICity | null = null;
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
     this.countries = Country.getAllCountries();
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const country = params['country'];
+      const city = params['city'];
+
+      if (typeof country !== 'string' || typeof city !== 'string') {
+        return;
+      }
+
+      this.selectedCountry =
+        this.countries.find(x => x.isoCode === country) || null;
+
+      this.cities = City.getCitiesOfCountry(country) || [];
+
+      this.selectedCity = this.cities?.find(x => x.name === city) || null;
+    });
   }
 
   onCountryChange() {
