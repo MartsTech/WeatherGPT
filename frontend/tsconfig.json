@@ -23,6 +23,7 @@
       "@core/*": ["./core/*"],
       "@features/*": ["./features/*"],
       "@shared/*": ["./shared/*"],
+      "@env/*": ["../environments/*"],
       "@app/*": ["./*"]
     }
   },

@@ -1,9 +1,8 @@
 import type { Routes } from '@angular/router';
-import { provideRouter } from '@angular/router';
 
 import { ForecastGuard } from '@features/forecast/forecast.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
@@ -18,5 +17,3 @@ const routes: Routes = [
     canActivate: [ForecastGuard],
   },
 ];
-
-export default provideRouter(routes);
