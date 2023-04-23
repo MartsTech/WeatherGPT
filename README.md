@@ -6,7 +6,7 @@
 </h1>
 
 <h4 align="center">
-   WeatherGPT is weather forecast fullstack application build with Angular and Django. It uses the Open Meteo API to get the weather forecast data and the GPT-3 API to generate the weather forecast summary.
+   WeatherGPT is weather forecast application build with Angular and Django. It uses the Open Meteo API to get the weather forecast data and the GPT-3 API to generate the weather forecast summary.
 </h4>
 
 <p align="center">
