@@ -25,7 +25,7 @@ import { TitleComponent } from '@shared/components/title/title.component';
             <app-title>WeatherGPT</app-title>
           </div>
           <div class="text-center">
-            <app-subtitle>Weather Forecasting with GPT-3</app-subtitle>
+            <app-subtitle>Weather Forecasting with GPT-3.5</app-subtitle>
           </div>
           <div class="sm:my-10">
             <app-divider></app-divider>

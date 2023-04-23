@@ -1,0 +1,29 @@
+version: "3"
+services:
+  #######################################################
+  #  Frontend
+  #######################################################
+  frontend:
+    hostname: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    networks:
+      - weathergpt
+  #######################################################
+  #  Backend
+  #######################################################
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - weathergpt
+
+networks:
+  weathergpt:
+    name: weathergpt

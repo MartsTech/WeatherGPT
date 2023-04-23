@@ -45,7 +45,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'backend.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    os.getenv('CLIENT_URL')
+    os.getenv('FRONTEND_URL')
 ]
 
 TEMPLATES = [
