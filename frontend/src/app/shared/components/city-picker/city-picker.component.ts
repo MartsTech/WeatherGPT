@@ -116,6 +116,8 @@ export class CityPickerComponent implements OnInit {
     } else {
       this.states = [];
     }
+    this.selectedState = null;
+    this.selectedCity = null;
     this.cities = [];
   }
 
@@ -129,6 +131,7 @@ export class CityPickerComponent implements OnInit {
     } else {
       this.cities = [];
     }
+    this.selectedCity = null;
   }
 
   onCityChange() {

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   standalone: true,
   selector: 'app-title',
   template: `
-    <p class="text-6xl font-bold text-gray-500">
+    <p class="text-4xl font-bold text-gray-500 sm:text-6xl">
       <ng-content></ng-content>
     </p>
   `,

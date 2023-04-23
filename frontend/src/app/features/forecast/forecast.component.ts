@@ -102,7 +102,12 @@ import { ForecastService } from './forecast.service';
             </p>
           </div>
           <div class="m-2 mb-10">
-            <app-callout></app-callout>
+            <app-callout *ngIf="!!summary" title="{{ summary }}"> </app-callout>
+            <app-callout
+              *ngIf="!summary"
+              title="Generating Summary ..."
+              [warning]="true">
+            </app-callout>
           </div>
           <div class="m-2 grid grid-cols-1 gap-5 xl:grid-cols-2">
             <app-metric
@@ -178,6 +183,7 @@ import { ForecastService } from './forecast.service';
 export class ForecastComponent implements OnInit {
   country: ICountry | null = null;
   city: ICity | null = null;
+  summary: string | null = null;
   lastUpdated: string | null = null;
   timezone: string | null = null;
   maxTemperature: string | null = null;
@@ -227,6 +233,15 @@ export class ForecastComponent implements OnInit {
       if (!this.country || !this.city) {
         return;
       }
+
+      this.forecastService
+        .getWeatherForecastSummary(
+          Number(this.city.latitude),
+          Number(this.city.longitude)
+        )
+        .subscribe(data => {
+          this.summary = data.summary;
+        });
 
       this.forecastService
         .getWeatherForecast(

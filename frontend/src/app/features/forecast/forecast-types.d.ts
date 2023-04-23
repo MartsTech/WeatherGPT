@@ -1,3 +1,7 @@
+export interface IForecastSummary {
+  summary: string;
+}
+
 export interface IForecast {
   latitude: number;
   longitude: number;
