@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ICity, ICountry } from 'country-state-city';
 
 import { CardComponent } from '@shared/components/card/card.component';
 import { CityPickerComponent } from '@shared/components/city-picker/city-picker.component';
-import { CityPickedEvent } from '@shared/components/city-picker/city-types';
 import { DividerComponent } from '@shared/components/divider/divider.component';
 import { SubtitleComponent } from '@shared/components/subtitle/subtitle.component';
 import { TitleComponent } from '@shared/components/title/title.component';
@@ -34,26 +31,11 @@ import { TitleComponent } from '@shared/components/title/title.component';
             <app-divider></app-divider>
           </div>
           <app-card background="blue">
-            <app-city-picker
-              (onCityPicked)="onComplete($event)"></app-city-picker>
+            <app-city-picker></app-city-picker>
           </app-card>
         </app-card>
       </div>
     </div>
   `,
 })
-export class HomeComponent {
-  selectedCountry: ICountry | null = null;
-  selectedCity: ICity | null = null;
-
-  constructor(private router: Router) {}
-
-  onComplete(event: CityPickedEvent) {
-    this.router.navigate(['forecast'], {
-      queryParams: {
-        country: event.country.isoCode,
-        city: event.city.name,
-      },
-    });
-  }
-}
+export class HomeComponent {}

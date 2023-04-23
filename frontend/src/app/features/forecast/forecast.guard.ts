@@ -5,7 +5,7 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { City, Country } from 'country-state-city';
+import { City, Country, State } from 'country-state-city';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,13 +23,16 @@ export class ForecastGuard {
     | boolean
     | UrlTree {
     const country = route.queryParamMap.get('country');
+    const state = route.queryParamMap.get('state');
     const city = route.queryParamMap.get('city');
 
     if (
       !country ||
+      !state ||
       !city ||
       !Country.getCountryByCode(country) ||
-      !City.getCitiesOfCountry(country)?.find(c => c.name === city)
+      !State.getStateByCodeAndCountry(state, country) ||
+      !City.getCitiesOfState(country, state)?.find(c => c.name === city)
     ) {
       this.router.navigate(['']);
       return false;

@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { City, Country, ICity, ICountry } from 'country-state-city';
 import { NgChartsModule } from 'ng2-charts';
@@ -13,7 +13,6 @@ import { MoonComponent } from '@shared/icons/moon/moon.component';
 import { SunComponent } from '@shared/icons/sun/sun.component';
 import { weatherCodes, weatherIcon } from '@shared/utils/weather';
 
-import { CityPickedEvent } from '@shared/components/city-picker/city-types';
 import { SubtitleComponent } from '@shared/components/subtitle/subtitle.component';
 import { ForecastService } from './forecast.service';
 
@@ -45,7 +44,7 @@ import { ForecastService } from './forecast.service';
             Long/Lat: {{ city?.longitude }}, {{ city?.latitude }}
           </p>
         </div>
-        <app-city-picker (onCityPicked)="onComplete($event)"></app-city-picker>
+        <app-city-picker></app-city-picker>
         <hr class="my-10" />
         <div class="my-5 flex items-center justify-between space-x-10">
           <div>
@@ -212,7 +211,6 @@ export class ForecastComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private forecastService: ForecastService
   ) {}
 
@@ -360,15 +358,6 @@ export class ForecastComponent implements OnInit {
             },
           };
         });
-    });
-  }
-
-  onComplete(event: CityPickedEvent) {
-    this.router.navigate(['forecast'], {
-      queryParams: {
-        country: event.country.isoCode,
-        city: event.city.name,
-      },
     });
   }
 }
