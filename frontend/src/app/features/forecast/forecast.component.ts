@@ -1,16 +1,20 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ChartData, ChartOptions } from 'chart.js';
 import { City, Country, ICity, ICountry } from 'country-state-city';
+import { NgChartsModule } from 'ng2-charts';
 
 import { CalloutComponent } from '@shared/components/callout/callout.component';
+import { CardComponent } from '@shared/components/card/card.component';
 import { CityPickerComponent } from '@shared/components/city-picker/city-picker.component';
-import { CityPickedEvent } from '@shared/components/city-picker/city-types';
 import { MetricComponent } from '@shared/components/metric/metric.component';
-import { weatherCodes, weatherIcon } from '@shared/utils/weather';
-
 import { MoonComponent } from '@shared/icons/moon/moon.component';
 import { SunComponent } from '@shared/icons/sun/sun.component';
+import { weatherCodes, weatherIcon } from '@shared/utils/weather';
+
+import { CityPickedEvent } from '@shared/components/city-picker/city-types';
+import { SubtitleComponent } from '@shared/components/subtitle/subtitle.component';
 import { ForecastService } from './forecast.service';
 
 @Component({
@@ -18,23 +22,26 @@ import { ForecastService } from './forecast.service';
   standalone: true,
   imports: [
     NgIf,
+    NgChartsModule,
     CalloutComponent,
     MetricComponent,
     CityPickerComponent,
     SunComponent,
     MoonComponent,
+    CardComponent,
+    SubtitleComponent,
   ],
   template: `
     <main class="flex min-h-screen flex-col md:flex-row">
       <section
-        class="bg-gradient-to-br from-[#394F68] to-[#183B7E] p-10 text-white">
+        class="bg-gradient-to-br from-[#394F68] to-[#183B7E] p-5 text-white sm:p-10">
         <div class="pb-5">
           <h1 *ngIf="!!city && !!city.name" class="text-6xl font-bold">
             {{ city.name }}
           </h1>
           <p
             *ngIf="!!city?.longitude && !!city?.latitude"
-            class="text-xs text-gray-400">
+            class="mt-4 text-xs text-gray-400">
             Long/Lat: {{ city?.longitude }}, {{ city?.latitude }}
           </p>
         </div>
@@ -57,7 +64,9 @@ import { ForecastService } from './forecast.service';
               width="75"
               height="75" />
             <div class="flex items-center justify-between space-x-10">
-              <p class="text-6xl font-semibold">{{ currTemperature }}</p>
+              <p class="text-5xl font-semibold md:text-6xl">
+                {{ currTemperature }}
+              </p>
               <p class="text-right text-lg font-extralight">
                 {{ weatherCodeLabel }}
               </p>
@@ -84,7 +93,7 @@ import { ForecastService } from './forecast.service';
         </div>
       </section>
       <section class="flex-1 p-5 lg:p-10">
-        <div class="p-5">
+        <div class="p-2 sm:p-5">
           <div class="pb-5">
             <h2 class="text-xl font-bold">Todays Overview</h2>
             <p
@@ -133,7 +142,36 @@ import { ForecastService } from './forecast.service';
           </div>
         </div>
         <hr class="mb-5" />
-        <div class="space-y-3"></div>
+        <div class="space-y-3">
+          <div class="mt-6">
+            <app-card>
+              <app-subtitle>Temperature & UV Index</app-subtitle>
+              <canvas baseChart [data]="tempChartData" type="line"> </canvas>
+            </app-card>
+          </div>
+          <div class="mt-6">
+            <app-card>
+              <app-subtitle>Chances of Rain</app-subtitle>
+              <canvas
+                baseChart
+                type="line"
+                [data]="rainChartData"
+                [options]="rainChartOptions">
+              </canvas>
+            </app-card>
+          </div>
+          <div class="mt-6">
+            <app-card>
+              <app-subtitle>Humidity Levels</app-subtitle>
+              <canvas
+                baseChart
+                type="line"
+                [data]="humidityChartData"
+                [options]="humidityChartOptions">
+              </canvas>
+            </app-card>
+          </div>
+        </div>
       </section>
     </main>
   `,
@@ -166,6 +204,11 @@ export class ForecastComponent implements OnInit {
   weatherCodeIcon: string | null = null;
   sunrise: string | null = null;
   sunset: string | null = null;
+  tempChartData: ChartData = { datasets: [] };
+  rainChartData: ChartData = { datasets: [] };
+  rainChartOptions: ChartOptions = {};
+  humidityChartData: ChartData = { datasets: [] };
+  humidityChartOptions: ChartOptions = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -244,6 +287,78 @@ export class ForecastComponent implements OnInit {
                 hour12: true,
               })
             : null;
+
+          const hourly = data.hourly.time
+            ?.map(time =>
+              new Date(time).toLocaleTimeString('en-GB', {
+                hour: 'numeric',
+                hour12: false,
+              })
+            )
+            .splice(0, 24);
+
+          this.tempChartData = {
+            labels: hourly,
+            datasets: [
+              {
+                label: 'UV Index',
+                fill: 'origin',
+                backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                data: data.hourly.uv_index?.splice(0, 24) || [],
+              },
+              {
+                label: 'Temperature (°C)',
+                fill: 'origin',
+                backgroundColor: 'rgba(234, 179, 8, 0.3)',
+                borderColor: 'rgba(234, 179, 8, 1)',
+                pointBackgroundColor: 'rgba(234, 179, 8, 1)',
+                data: data.hourly.temperature_2m?.splice(0, 24) || [],
+              },
+            ],
+          };
+
+          this.rainChartData = {
+            labels: hourly,
+            datasets: [
+              {
+                label: 'Rain (%)',
+                fill: 'origin',
+                backgroundColor: 'rgba(6, 182, 212, 0.3)',
+                borderColor: 'rgba(6, 182, 212, 1)',
+                pointBackgroundColor: 'rgba(6, 182, 212, 1)',
+                data:
+                  data.hourly.precipitation_probability?.splice(0, 24) || [],
+              },
+            ],
+          };
+
+          this.rainChartOptions = {
+            scales: {
+              yAxes: { max: 100, min: 0 },
+            },
+          };
+
+          this.humidityChartData = {
+            labels: hourly,
+            datasets: [
+              {
+                label: 'Humidity (%)',
+                fill: 'origin',
+                backgroundColor: 'rgba(15, 118, 110, 0.3)',
+                borderColor: 'rgba(15, 118, 110, 1)',
+                pointBackgroundColor: 'rgba(15, 118, 110, 1)',
+                data: data.hourly.relativehumidity_2m?.splice(0, 24) || [],
+              },
+            ],
+          };
+
+          this.humidityChartOptions = {
+            scales: {
+              yAxes: { max: 100, min: 0 },
+            },
+          };
         });
     });
   }

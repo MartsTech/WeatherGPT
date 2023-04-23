@@ -21,7 +21,9 @@ import type { MetricColor } from './metric-types';
       "
       class="relative w-full rounded-lg border-t-4 bg-white p-6 text-left shadow ring-1 ring-gray-200">
       <p class="text-sm font-normal text-gray-500">{{ title }}</p>
-      <p class="text-3xl font-semibold text-gray-700">{{ value }}</p>
+      <p class="text-2xl font-semibold text-gray-700 sm:text-3xl">
+        {{ value }}
+      </p>
     </div>
   `,
 })
